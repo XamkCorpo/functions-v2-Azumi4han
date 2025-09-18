@@ -2,55 +2,64 @@
 {
     internal class Program
     {
-        static void Main(string[] args)
+
+
+        public static T AskForSomething<T>(string prompt)
         {
-            // Everything is intentionally inside Main before refactoring to functions
-            //Your job is to refactor this code to use functions for better readability and reusability.
-            //Check learn on how to do this
-            string name = "";
-            int age = 0;
+            object input;
 
-            // Ask for name and ensure it is not empty
             while (true)
             {
-                Console.Write("Enter your name: ");
-                name = Console.ReadLine();
-                if (!string.IsNullOrWhiteSpace(name))
-                    break;
-                else
-                    Console.WriteLine("Name cannot be empty.");
-            }
+                Console.Write(prompt);
+                input = Console.ReadLine()!;
 
-            // Ask for age and ensure it is a positive integer
-            while (true)
-            {
-                Console.Write("Enter your age: ");
-                string input = Console.ReadLine();
-                if (int.TryParse(input, out age) && age > 0)
-                    break;
+                if (typeof(T) == typeof(string) && !int.TryParse(input?.ToString(), out int _))
+                {
+                    if (!string.IsNullOrWhiteSpace(input?.ToString()))
+                        return (T)(object)(input?.ToString() ?? string.Empty);
+                    else
+                        Console.WriteLine("Input cannot be empty.");
+                }
+
+                if (typeof(T) == typeof(int) && int.TryParse(input?.ToString(), out int i))
+                    return (T)(object)i;
                 else
                     Console.WriteLine("Please enter a positive integer.");
             }
+        }
 
-            // Print name and age
+        static void TulostaNimiJaIka(string name, int age)
+        {
             Console.WriteLine($"Your name is {name} and your age is {age}.");
+        }
+
+        static bool TarkistaTaysiIkainen(int age)
+        {
+            return age >= 18;
+        }
+
+        static void VertaaNimea(string name, string compareTo)
+        {
+            if (name.Equals(compareTo, StringComparison.OrdinalIgnoreCase))
+                Console.WriteLine($"Your name matches '{compareTo}' (case-insensitive).");
+            if (name.Equals(compareTo))
+                Console.WriteLine("Your name is exactly 'Matti' (case-sensitive).");
+        }
+
+        static void Main(string[] args)
+        {
+            string name = AskForSomething<string>("Enter your name: ");
+            int age = AskForSomething<int>("Enter your age: ");
+
+            TulostaNimiJaIka(name, age);
 
             // Check if the user is an adult
-            if (age >= 18)
+            if (TarkistaTaysiIkainen(age))
                 Console.WriteLine("You are an adult.");
             else
                 Console.WriteLine("You are not an adult.");
 
-            // Compare the name to another string (e.g., "Matti")
-            string compareName = "Matti";
-
-            // Comparison ignoring case
-            if (name.Equals(compareName, StringComparison.OrdinalIgnoreCase))
-                Console.WriteLine("Your name matches 'Matti' (case-insensitive).");
-
-            // Exact match comparison (case-sensitive)
-            if (name.Equals(compareName))
-                Console.WriteLine("Your name is exactly 'Matti' (case-sensitive).");
+            VertaaNimea(name, "Matti");
         }
     }
 }
