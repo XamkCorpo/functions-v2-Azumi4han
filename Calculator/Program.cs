@@ -16,7 +16,6 @@
                         return i;
                     else
                         Console.WriteLine("Select valid operation.");
-
                 }
                 else
                 {
@@ -70,6 +69,7 @@
 
             int division(int x, int y)
             {
+                if (x == 0 || y == 0) return 0;
                 return x / y;
             }
 
